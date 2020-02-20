@@ -11,10 +11,6 @@ public class Room {
 		mid = "|   |";
 		bot = "- - -";
 	}
-	
-	public String toString() {
-		return top + "\n" + mid + "\n" + bot;
-	}
 
 	public String getTop() {
 		return this.top;
