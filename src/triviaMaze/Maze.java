@@ -5,7 +5,10 @@ import java.util.Arrays;
 
 public class Maze implements Serializable {
 
+	private static final long serialVersionUID = -6846687447036983692L;
 	private Room[][] mazeArray;
+	private int posX;
+	private int posY;
 
 	public Maze(int x, int y) {
 		generateMaze(x, y);
@@ -26,6 +29,22 @@ public class Maze implements Serializable {
 				mazeArray[i][j] = new Room();
 			}
 		}
+	}
+	
+	public int getXPosition() {
+		return posX;
+	}
+	
+	public void setXPosition(int x) {
+		this.posX = x;
+	}
+	
+	public int getYPosition() {
+		return posY;
+	}
+	
+	public void setYPosition(int y) {
+		this.posY = y;
 	}
 
 	public String toString() {

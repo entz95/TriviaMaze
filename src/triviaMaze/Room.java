@@ -1,7 +1,10 @@
 package triviaMaze;
 
-public class Room {
+import java.io.Serializable;
 
+public class Room implements Serializable{
+
+	private static final long serialVersionUID = 4880979877529404810L;
 	private String top;
 	private String mid;
 	private String bot;
