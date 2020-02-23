@@ -8,11 +8,20 @@ public class Room implements Serializable{
 	private String top;
 	private String mid;
 	private String bot;
+	private int status;
+		//1 for open
+		//0 for locked
+		//-1 for sealed
 	
 	public Room() {
 		top = "- - -";
 		mid = "|   |";
 		bot = "- - -";
+		status = 0;
+	}
+	
+	public int getStatus() {
+		return this.status;
 	}
 
 	public String getTop() {
@@ -25,5 +34,9 @@ public class Room implements Serializable{
 
 	public String getBot() {
 		return this.bot;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 }
