@@ -6,5 +6,6 @@ public class Tester {
 		
 		Maze triviaMaze = new Maze(6,6);
 		System.out.println(triviaMaze.toString());
+
 	}
 }
