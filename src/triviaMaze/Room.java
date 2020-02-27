@@ -1,6 +1,16 @@
 package triviaMaze;
 
 import java.io.Serializable;
+import question.Question;
+
+/*
+ * Author: Justin Entz
+ * 
+ * Purpose: This class contains all data that room needs to hold and know
+ * 
+ * Version: 1.0
+ * 
+ */
 
 public class Room implements Serializable{
 
@@ -8,6 +18,7 @@ public class Room implements Serializable{
 	private String top;
 	private String mid;
 	private String bot;
+	private Question question;
 	private int status;
 		//1 for open
 		//0 for locked
@@ -38,5 +49,18 @@ public class Room implements Serializable{
 
 	public void setStatus(int status) {
 		this.status = status;
+	}
+	
+	public Question getQuestion() {
+		return this.question;
+	}
+	
+	public String displayQuestion(Question question) {
+		String toRet = "";
+		
+		toRet = toRet + question.getQuestion();
+		toRet = toRet + question.getOptions();
+		
+		return toRet;
 	}
 }

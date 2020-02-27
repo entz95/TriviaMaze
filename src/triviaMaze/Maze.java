@@ -2,6 +2,19 @@ package triviaMaze;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.Scanner;
+
+
+/*
+ * Author: Justin Entz
+ * 
+ * Purpose: This class creates a maze object that is a 2d array of rooms, it moves the player from one room to the next, checks to see if you can still win the game and adjusts player position
+ * and room status.
+ * 
+ * Version: 1.0
+ * 
+ */
+
 
 //in the navigate maze class we might want to make a separate method that we call to display and answer the question and change room status from closed to open/sealed to see if they can then move so we have more readable code
 //and also implement another method that checks to see if there are any possible paths to the exit
@@ -50,6 +63,10 @@ public class Maze implements Serializable {
 		this.posY = y;
 	}
 
+	public Room[][] getMazeArray() {
+		return mazeArray;
+	}
+
 	public Room navigateMaze(String input) {
 		assert input != null : "input is not valid";
 
@@ -90,18 +107,33 @@ public class Maze implements Serializable {
 	}
 
 	private Room moveRoom(Room current, Room next) {
+		Scanner kb = new Scanner(System.in);
 		if (next.getStatus() == -1) {// if room is sealed
 			System.out.println("Room is sealed");
 			return current;
-		} else if (next.getStatus() == 1) {// if room is open
-			System.out.println("room is open");
-			return next;
+		} else if (next.getStatus() == 0) {// if room is closed
+			System.out.println("Room is locked. answer question correctly to progress.");
+			System.out.println(next.displayQuestion(next.getQuestion()));
+			String Useranswer = kb.nextLine();
+			if (Useranswer.equals(next.getQuestion().getAnswer())) {
+				System.out.println("you answered correctly and move into the next room");
+				next.setStatus(1);
+				if(checkForPaths(this.mazeArray) == false) {
+					//end game
+				}
+				return next;
+			} else {
+				System.out.println(
+						"you did not answer correctly, the correct answer is: " + next.getQuestion().getAnswer());
+				next.setStatus(-1);
+				return current;
+			}
 		} else
-			// implement code for the question here
+			// room will be open if not locked or sealed
 			return next;
 	}
 
-	private boolean checkForPaths(Room[][] triviaMaze) {
+	boolean checkForPaths(Room[][] triviaMaze) {
 		assert triviaMaze != null : "Maze is null";
 
 		int[][] pathTester = roomArrayToIntArray(triviaMaze);
@@ -159,5 +191,9 @@ public class Maze implements Serializable {
 			}
 		}
 		return line;
+	}
+
+	public Room setStart() {
+		return mazeArray[1][1];
 	}
 }
