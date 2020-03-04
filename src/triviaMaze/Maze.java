@@ -1,7 +1,13 @@
 package triviaMaze;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
+import java.util.Scanner;
+
+import application.DBGetter;
+import question.Question;
 
 //in the navigate maze class we might want to make a separate method that we call to display and answer the question and change room status from closed to open/sealed to see if they can then move so we have more readable code
 //and also implement another method that checks to see if there are any possible paths to the exit
@@ -14,10 +20,13 @@ public class Maze implements Serializable {
 	private int posY;
 
 	public Maze(int x, int y) {
+		
 		generateMaze(x, y);
+		
 	}
 
 	private void generateMaze(int rows, int columns) {
+		
 		assert rows > 0 : "rows is zero or less";
 		assert columns > 0 : "columns is zero or less";
 
@@ -26,12 +35,20 @@ public class Maze implements Serializable {
 		for (Room[] row : mazeArray) {
 			Arrays.fill(row, null);
 		}
+		
+		ArrayList<Question> questions = DBGetter.getAllQuestions();
+		Random rng = new Random();
 
 		for (int i = 1; i <= rows; i++) {
+			
 			for (int j = 1; j <= columns; j++) {
-				mazeArray[i][j] = new Room();
+				int index = rng.nextInt(questions.size());
+				mazeArray[i][j] = new Room(questions.get(index));
+				
 			}
+			
 		}
+		
 	}
 
 	public int getXPosition() {
@@ -53,34 +70,34 @@ public class Maze implements Serializable {
 	public Room navigateMaze(String input) {
 		assert input != null : "input is not valid";
 
-		int currentXPosition = this.posX;
-		int currentYPosition = this.posY;
-		Room currentRoom = mazeArray[currentYPosition][currentXPosition];
-		Room nextRoom = new Room();
+		int targetX = this.posX;
+		int targetY = this.posY;
+		Room currentRoom = mazeArray[targetY][targetX];
+		Room nextRoom;
 
 		try {
 			switch (input) {
 			case ("Up"): // case for moving up/north
-				currentYPosition = currentYPosition - 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				targetY = targetY - 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
 				break;
 			case ("Down"): // case for moving down/south
-				currentYPosition = currentYPosition + 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				targetY = targetY + 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
 				break;
 			case ("Left"): // case for moving left/west
-				currentXPosition = currentXPosition - 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				targetX = targetX - 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
 				break;
 			case ("Right"): // case for moving right/east
-				currentXPosition = currentXPosition + 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				targetX = targetX + 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
 				break;
 			default:
 				nextRoom = currentRoom;
 			}
-			setXPosition(currentXPosition);
-			setYPosition(currentYPosition);
+			setXPosition(targetX);
+			setYPosition(targetY);
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("You cannot move " + input);
 			return currentRoom;
@@ -98,7 +115,28 @@ public class Maze implements Serializable {
 			return next;
 		} else
 			// implement code for the question here
-			return next;
+			
+			System.out.println(next.displayQuestion());
+			System.out.println(next.displayOptions());
+			System.out.println();
+			System.out.print("Answer: ");
+		
+			Scanner kin = new Scanner(System.in);
+			
+			String answer = kin.nextLine();
+			
+			boolean correct = next.answerQuestion(answer);
+			
+			if(correct) {
+				System.out.println("Correct! Proceeding to next room...");
+				System.out.println();
+				return next;
+			} else {
+				System.out.println("Incorrect! Sealing room...");
+				System.out.println();
+				return current;
+			}
+			
 	}
 
 	private boolean checkForPaths(Room[][] triviaMaze) {
