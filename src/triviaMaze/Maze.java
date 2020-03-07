@@ -26,8 +26,8 @@ public class Maze implements Serializable {
 	private int posX;
 	private int posY;
 
-	public Maze(int x, int y) {
-		generateMaze(x, y);
+	public Maze(int x) {
+		generateMaze(x, x);
 	}
 
 	private void generateMaze(int rows, int columns) {
@@ -36,8 +36,10 @@ public class Maze implements Serializable {
 
 		this.mazeArray = new Room[rows + 2][columns + 2];
 
-		for (Room[] row : mazeArray) {
-			Arrays.fill(row, null);
+		for (int i = 0; i <= rows; i++) {
+			for (int j = 0; j <= columns; j++) {
+				mazeArray[i][j] = Room.nullRoom();
+			}
 		}
 
 		for (int i = 1; i <= rows; i++) {
@@ -72,26 +74,26 @@ public class Maze implements Serializable {
 
 		int currentXPosition = this.posX;
 		int currentYPosition = this.posY;
-		Room currentRoom = mazeArray[currentYPosition][currentXPosition];
+		Room currentRoom = mazeArray[currentXPosition][currentYPosition];
 		Room nextRoom = new Room();
 
 		try {
 			switch (input) {
 			case ("Up"): // case for moving up/north
 				currentYPosition = currentYPosition - 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			case ("Down"): // case for moving down/south
 				currentYPosition = currentYPosition + 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			case ("Left"): // case for moving left/west
 				currentXPosition = currentXPosition - 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			case ("Right"): // case for moving right/east
 				currentXPosition = currentXPosition + 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[currentYPosition][currentXPosition]);
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			default:
 				nextRoom = currentRoom;
@@ -107,28 +109,32 @@ public class Maze implements Serializable {
 	}
 
 	private Room moveRoom(Room current, Room next) {
+		
 		Scanner kb = new Scanner(System.in);
-		if (next.getStatus() == -1) {// if room is sealed
-			System.out.println("Room is sealed");
-			return current;
-		} else if (next.getStatus() == 0) {// if room is closed
-			System.out.println("Room is locked. answer question correctly to progress.");
-			System.out.println(next.displayQuestion(next.getQuestion()));
-			String Useranswer = kb.nextLine();
-			if (Useranswer.equals(next.getQuestion().getAnswer())) {
-				System.out.println("you answered correctly and move into the next room");
-				next.setStatus(1);
-				if(checkForPaths(this.mazeArray) == false) {
-					//end game
-				}
-				return next;
-			} else {
-				System.out.println(
-						"you did not answer correctly, the correct answer is: " + next.getQuestion().getAnswer());
-				next.setStatus(-1);
-				return current;
-			}
-		} else
+		
+//		if (next.getStatus() == -1) {// if room is sealed
+//			System.out.println("Room is sealed");
+//			return current;
+//		}
+//		
+//		if (next.getStatus() == 0) {// if room is closed
+//			System.out.println("Room is locked. answer question correctly to progress.");
+//			System.out.println(next.displayQuestion(next.getQuestion()));
+//			String Useranswer = kb.nextLine();
+//			if (Useranswer.equals(next.getQuestion().getAnswer())) {
+//				System.out.println("you answered correctly and move into the next room");
+//				next.setStatus(1);
+//				if(checkForPaths(this.mazeArray) == false) {
+//					//end game
+//				}
+//				return next;
+//			} else {
+//				System.out.println(
+//						"you did not answer correctly, the correct answer is: " + next.getQuestion().getAnswer());
+//				next.setStatus(-1);
+//				return current;
+//			}
+//		} else
 			// room will be open if not locked or sealed
 			return next;
 	}
@@ -195,5 +201,9 @@ public class Maze implements Serializable {
 
 	public Room setStart() {
 		return mazeArray[1][1];
+	}
+	
+	public Room getEnd() {
+		return mazeArray[mazeArray.length-1][mazeArray.length-1];
 	}
 }

@@ -28,11 +28,12 @@ public class Room implements Serializable{
 		top = "- - -";
 		mid = "|   |";
 		bot = "- - -";
-		status = 0;
+		status = 1;
 	}
 	
-	public int getStatus() {
-		return this.status;
+	public static Room nullRoom() {
+		Room nullRoom = null;
+		return nullRoom;
 	}
 
 	public String getTop() {
@@ -51,6 +52,9 @@ public class Room implements Serializable{
 		this.status = status;
 	}
 	
+	public int getStatus() {
+		return this.status;
+	}
 	public Question getQuestion() {
 		return this.question;
 	}
