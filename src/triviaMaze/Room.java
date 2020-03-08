@@ -72,4 +72,13 @@ public class Room implements Serializable{
 		
 		return correct;
 	}
+	
+	/*
+	 * static generate a sealed room
+	 * 
+	 * create a question with blank data
+	 * set room to sealed
+	 * return the room
+	 * 
+	 */
 }

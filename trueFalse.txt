@@ -1,0 +1,4 @@
+Fireball is a 3rd level spell.*TRUE
+Warlocks use Charisma to cast spells.*TRUE
+If you are not proficient with armor, it does not impact your ability to cast spells.*FALSE
+Dwarves are classified as small creatures.*FALSE

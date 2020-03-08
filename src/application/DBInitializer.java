@@ -1,8 +1,11 @@
 package application;
 
+import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.Scanner;
 //import java.util.Scanner;
 
 /*
@@ -11,22 +14,22 @@ import java.sql.Statement;
  * The purpose of this class is to allow the database to be reset to a default state, should something ever happen
  * to the database that would make the game unable to be played properly. 
  * 
- * Version: 
+ * Version: 0.7
  * 
  */
 
 public class DBInitializer {
 	
 	public static void initializeTrueFalse() {
-		Connection c = null;
+		Connection conn = null;
 
 		try {
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:questions.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:questions.db");
 			
 			System.out.println("Connection established...");
 
-			Statement stmt = c.createStatement();
+			Statement stmt = conn.createStatement();
 			
 			String sql = "";
 			
@@ -44,32 +47,30 @@ public class DBInitializer {
 			}
 			
 			System.out.println("Table created...");
-			//TODO Swap this to a loop using an input file for cleaner code
-
-			sql = "INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER)"
-					+ "VALUES(1, 'Fireball is a 3rd level spell.', 'TRUE')";
-			stmt.executeUpdate(sql);
-
-			sql = "INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER)"
-					+ "VALUES(2, 'Warlocks use Charisma to cast spells.', 'TRUE')";
-			stmt.executeUpdate(sql);
-
-			sql = "INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER)"
-					+ "VALUES(3, 'If you are not proficient with armor, it does not impact your ability to cast spells.'," + 
-					" 'FALSE')";
-			stmt.executeUpdate(sql);
-
-			sql = "INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER)"
-					+ "VALUES(4, 'Dwarves are classified as small creatures.', 'FALSE')";
-			stmt.executeUpdate(sql);
 			
-			//TODO end loop content
+			File source = new File("./trueFalse.txt");
+			if(source.exists() && source.canRead()) {
+				Scanner fin = new Scanner(source);
+				int count = 1;
+				while(fin.hasNextLine()) {
+					String[] result = fin.nextLine().split("\\*");
+					PreparedStatement pstmt = conn.prepareStatement("INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER)" +
+					"VALUES(?, ?, ?)");
+					pstmt.setInt(1, count);
+					pstmt.setString(2, result[0]);
+					pstmt.setString(3, result[1]);
+					
+					pstmt.executeUpdate();
+					count++;
+				}
+				fin.close();
+			}
 			
 			System.out.println("Added tuples to table...");
 			
 			stmt.close();
-			c.close();
-			c = null;
+			conn.close();
+			conn = null;
 			
 			System.out.println("All connections closed...");
 
@@ -82,15 +83,15 @@ public class DBInitializer {
 	public static void initializeMultipleChoice() {
 		//TODO Fill in for multiple choice table
 		
-		Connection c = null;
+		Connection conn = null;
 
 		try {
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:questions.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:questions.db");
 			
 			System.out.println("Connection established...");
 
-			Statement stmt = c.createStatement();
+			Statement stmt = conn.createStatement();
 			
 			String sql = "";
 			
@@ -112,35 +113,35 @@ public class DBInitializer {
 			}
 			
 			System.out.println("Table created...");
-			//TODO Swap this to a loop using an input file for cleaner code
-
-			sql = "INSERT INTO MULTIPLE_CHOICE (ID, QUESTION, ANSWER, OPTION_A, OPTION_B, OPTION_C, OPTION_D)"
-					+" VALUES(1, 'Tieflings are related to what type of creature?', 'Fiends',"
-					+" 'Fey', 'Celestials', 'Fiends', 'Undead')";
-			stmt.executeUpdate(sql);
-
-			sql = "INSERT INTO MULTIPLE_CHOICE (ID, QUESTION, ANSWER, OPTION_A, OPTION_B, OPTION_C, OPTION_D)"
-					+ " VALUES(2, 'Sorcerers use this as their primary attribute:', 'Charisma',"
-					+ " 'Strength', 'Charisma', 'Wisdom', 'Dexterity')";
-			stmt.executeUpdate(sql);
-
-			sql = "INSERT INTO MULTIPLE_CHOICE (ID, QUESTION, ANSWER, OPTION_A, OPTION_B, OPTION_C, OPTION_D)"
-					+ " VALUES(3, 'What class has the highest hit die?', 'Barbarian'," 
-					+ " 'Barbarian', 'Wizard', 'Paladin', 'Monk')";
-			stmt.executeUpdate(sql);
-
-			sql = "INSERT INTO MULTIPLE_CHOICE (ID, QUESTION, ANSWER, OPTION_A, OPTION_B, OPTION_C, OPTION_D)"
-					+ " VALUES(4, 'The shortest race in the PHB is:', 'Halfling', "
-					+ " 'Half-orc', 'Human', 'Gnome', 'Halfling')";
-			stmt.executeUpdate(sql);
 			
-			//TODO end loop content
+			File source = new File("./multipleChoice.txt");
+			if(source.exists() && source.canRead()) {
+				Scanner fin = new Scanner(source);
+				int count = 1;
+				while(fin.hasNextLine()) {
+					String[] result = fin.nextLine().split("\\*");
+					PreparedStatement pstmt = conn.prepareStatement("INSERT INTO MULTIPLE_CHOICE " +
+					"(ID, QUESTION, ANSWER, OPTION_A, OPTION_B, OPTION_C, OPTION_D)" +
+					"VALUES(?, ?, ?, ?, ?, ?, ?)");
+					pstmt.setInt(1, count);
+					pstmt.setString(2, result[0]);
+					pstmt.setString(3, result[1]);
+					pstmt.setString(4, result[2]);
+					pstmt.setString(5, result[3]);
+					pstmt.setString(6, result[4]);
+					pstmt.setString(7, result[5]);
+					
+					pstmt.executeUpdate();
+					count++;
+				}
+				fin.close();
+			}
 			
 			System.out.println("Added tuples to table...");
 			
 			stmt.close();
-			c.close();
-			c = null;
+			conn.close();
+			conn = null;
 			
 			System.out.println("All connections closed...");
 
@@ -151,11 +152,13 @@ public class DBInitializer {
 	
 	}
 	
-	//This main is for testing this class. Remove before final testing.
+//	This main is for testing this class. Remove before final testing.
 //	public static void main(String[] args) {
 //		
 //		DBInitializer.initializeTrueFalse();
 //		DBInitializer.initializeMultipleChoice();
+//		
+//		//System.out.println("Hello world");
 //		
 //	}
 }
