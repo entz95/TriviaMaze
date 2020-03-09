@@ -1,9 +1,7 @@
 package triviaMaze;
 
 import java.io.Serializable;
-import java.util.Arrays;
 import java.util.Scanner;
-
 
 /*
  * Author: Justin Entz
@@ -14,7 +12,6 @@ import java.util.Scanner;
  * Version: 1.0
  * 
  */
-
 
 //in the navigate maze class we might want to make a separate method that we call to display and answer the question and change room status from closed to open/sealed to see if they can then move so we have more readable code
 //and also implement another method that checks to see if there are any possible paths to the exit
@@ -28,6 +25,8 @@ public class Maze implements Serializable {
 
 	public Maze(int x) {
 		generateMaze(x, x);
+		this.posX = 1;
+		this.posY = 1;
 	}
 
 	private void generateMaze(int rows, int columns) {
@@ -98,8 +97,13 @@ public class Maze implements Serializable {
 			default:
 				nextRoom = currentRoom;
 			}
-			setXPosition(currentXPosition);
-			setYPosition(currentYPosition);
+			if(nextRoom == null) {
+				setXPosition(this.posX);
+				setYPosition(this.posY);
+			}else {
+				setXPosition(currentXPosition);
+				setYPosition(currentYPosition);
+			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("You cannot move " + input);
 			return currentRoom;
@@ -109,37 +113,38 @@ public class Maze implements Serializable {
 	}
 
 	private Room moveRoom(Room current, Room next) {
-		
+
 		Scanner kb = new Scanner(System.in);
-		
-//		if (next.getStatus() == -1) {// if room is sealed
-//			System.out.println("Room is sealed");
-//			return current;
-//		}
-//		
-//		if (next.getStatus() == 0) {// if room is closed
-//			System.out.println("Room is locked. answer question correctly to progress.");
-//			System.out.println(next.displayQuestion(next.getQuestion()));
-//			String Useranswer = kb.nextLine();
-//			if (Useranswer.equals(next.getQuestion().getAnswer())) {
-//				System.out.println("you answered correctly and move into the next room");
-//				next.setStatus(1);
-//				if(checkForPaths(this.mazeArray) == false) {
-//					//end game
-//				}
-//				return next;
-//			} else {
-//				System.out.println(
-//						"you did not answer correctly, the correct answer is: " + next.getQuestion().getAnswer());
-//				next.setStatus(-1);
-//				return current;
-//			}
-//		} else
-			// room will be open if not locked or sealed
-			return next;
+
+		if (next != null) {
+
+			if (next.getStatus() == -1) {// if room is sealed
+				System.out.println("Room is sealed");
+				return current;
+			} else if (next.getStatus() == 0) {// if room is closed
+				System.out.println("Room is locked. answer question correctly to progress.");
+				System.out.println(next.displayQuestion(next.getQuestion()));
+				String Useranswer = kb.nextLine();
+				if (Useranswer.equals(next.getQuestion().getAnswer())) {
+					System.out.println("you answered correctly and move into the next room");
+					next.setStatus(1);
+					return next;
+				} else {
+					System.out.println(
+							"you did not answer correctly, the correct answer is: " + next.getQuestion().getAnswer());
+					next.setStatus(-1);
+					return current;
+				}
+			} else
+				// room will be open if not locked or sealed
+				return next;
+		} else {
+			System.out.println("you cannot move there. Room is null.");
+			return current;
+		}
 	}
 
-	boolean checkForPaths(Room[][] triviaMaze) {
+	public boolean checkForPaths(Room[][] triviaMaze) {
 		assert triviaMaze != null : "Maze is null";
 
 		int[][] pathTester = roomArrayToIntArray(triviaMaze);
@@ -203,7 +208,12 @@ public class Maze implements Serializable {
 		return mazeArray[1][1];
 	}
 	
-	public Room getEnd() {
-		return mazeArray[mazeArray.length-1][mazeArray.length-1];
+	public Room getCurrentRoom() {
+		return mazeArray[posX][posY];
 	}
+
+	public Room getEnd() {
+		return mazeArray[mazeArray.length - 2][mazeArray.length - 2];
+	}
+
 }

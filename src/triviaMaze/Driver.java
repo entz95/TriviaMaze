@@ -22,19 +22,22 @@ public class Driver {
 			int difficulty = chooseDifficulty(kb);
 			Maze triviaMaze = new Maze(setDifficulty(difficulty));
 			Room currentRoom = triviaMaze.getMazeArray()[1][1];
-			
+
 			do {
 				System.out.println(triviaMaze.toString());
 
 				int directionChoice = chooseDirection(kb);
 				currentRoom = movePlayer(directionChoice, triviaMaze, currentRoom);
-			} while (triviaMaze.checkForPaths(triviaMaze.getMazeArray()) && currentRoom != triviaMaze.getMazeArray()[triviaMaze.getMazeArray().length - 2][triviaMaze.getMazeArray().length - 2]);
-			
-			System.out.println("You Win!");
+			} while (triviaMaze.checkForPaths(triviaMaze.getMazeArray()) && currentRoom != triviaMaze.getEnd());
+			if (triviaMaze.getCurrentRoom() == triviaMaze.getEnd()) {
+				System.out.println("You Win!");
+			} else if (!triviaMaze.checkForPaths(triviaMaze.getMazeArray())) {
+				System.out.println("You Lose!");
+			}
 			keepPlaying = playAgain(kb);
 		} while (keepPlaying);
 	}
-	
+
 	private static int chooseDifficulty(Scanner kb) {
 		int choice = 0;
 		do {
@@ -49,7 +52,7 @@ public class Driver {
 
 		return choice;
 	}
-	
+
 	private static int setDifficulty(int difficulty) {
 		switch (difficulty) {
 		case 1:
