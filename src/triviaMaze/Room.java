@@ -12,7 +12,7 @@ import question.Question;
  * 
  */
 
-public class Room implements Serializable{
+public class Room implements Serializable {
 
 	private static final long serialVersionUID = 4880979877529404810L;
 	private String top;
@@ -20,20 +20,24 @@ public class Room implements Serializable{
 	private String bot;
 	private Question question;
 	private int status;
-	private Question question;
 		//1 for open
 		//0 for locked
 		//-1 for sealed
 	
 	public Room(Question ques) {
 		top = "- - -";
-		mid = "|   |";
+		mid = "| O |";
 		bot = "- - -";
 		status = 1;
+		this.question = ques;
 	}
 	
 	public static Room nullRoom() {
-		Room nullRoom = null;
+		Room nullRoom = new Room(null);
+		nullRoom.status = -1;
+		nullRoom.top = "# # #";
+		nullRoom.mid = "# # #";
+		nullRoom.bot = "# # #";
 		return nullRoom;
 	}
 
@@ -49,7 +53,7 @@ public class Room implements Serializable{
 		return this.bot;
 	}
 
-	private void setStatus(int status) {
+	public void setStatus(int status) {
 		this.status = status;
 	}
 	

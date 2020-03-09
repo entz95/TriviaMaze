@@ -1,7 +1,11 @@
 package triviaMaze;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
+import application.DBGetter;
+import question.Question;
 
 /*
  * Author: Justin Entz
@@ -37,9 +41,12 @@ public class Maze implements Serializable {
 		this.mazeArray = new Room[rows + 2][columns + 2];
 
 		for (int i = 0; i <= rows; i++) {
+			
 			for (int j = 0; j <= columns; j++) {
+				
 				mazeArray[i][j] = Room.nullRoom();
 			}
+			
 		}
 		
 		ArrayList<Question> questions = DBGetter.getAllQuestions();
@@ -48,6 +55,7 @@ public class Maze implements Serializable {
 		for (int i = 1; i <= rows; i++) {
 			
 			for (int j = 1; j <= columns; j++) {
+				
 				int index = rng.nextInt(questions.size());
 				mazeArray[i][j] = new Room(questions.get(index));
 				
@@ -83,40 +91,73 @@ public class Maze implements Serializable {
 		int currentXPosition = this.posX;
 		int currentYPosition = this.posY;
 		Room currentRoom = mazeArray[currentXPosition][currentYPosition];
-		Room nextRoom = new Room();
+		Room nextRoom;
 
 		try {
 			switch (input) {
+			
 			case ("Up"): // case for moving up/north
+				if(checkBounds(currentXPosition, currentYPosition - 1)) {
+					
 				currentYPosition = currentYPosition - 1;
+				
+				}else {
+					System.out.println("You cannot move " + input);
+				}
+			
 				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
+				
 			case ("Down"): // case for moving down/south
+				if(checkBounds(currentXPosition, currentYPosition + 1)) {
+					
 				currentYPosition = currentYPosition + 1;
+
+				}else {
+					System.out.println("You cannot move " + input);
+				}
+			
 				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
+				
 			case ("Left"): // case for moving left/west
+				if(checkBounds(currentXPosition - 1, currentYPosition)) {
+					
 				currentXPosition = currentXPosition - 1;
+
+				}else {
+					System.out.println("You cannot move " + input);
+				}
+			
 				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
+				
 			case ("Right"): // case for moving right/east
-				currentXPosition = currentXPosition + 1;
+				if(checkBounds(currentXPosition + 1, currentYPosition)) {
+				
+					currentXPosition = currentXPosition + 1;
+
+				}else {
+					System.out.println("You cannot move " + input);
+				}
+			
 				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
+				
 			default:
 				nextRoom = currentRoom;
 			}
-			if(nextRoom == null) {
-				setXPosition(this.posX);
-				setYPosition(this.posY);
-			}else {
+				
 				setXPosition(currentXPosition);
 				setYPosition(currentYPosition);
-			}
+			
 		} catch (ArrayIndexOutOfBoundsException e) {
+			
 			System.out.println("You cannot move " + input);
 			return currentRoom;
+			
 		}
+		
 		return nextRoom;
 
 	}
@@ -131,16 +172,19 @@ public class Maze implements Serializable {
 				System.out.println("Room is sealed");
 				return current;
 			} else if (next.getStatus() == 0) {// if room is closed
-				System.out.println("Room is locked. answer question correctly to progress.");
+				
+				System.out.println("Room is locked. Answer question correctly to progress.");
 				System.out.println(next.displayQuestion(next.getQuestion()));
+				System.out.println();
+				
 				String Useranswer = kb.nextLine();
+				
 				if (Useranswer.equals(next.getQuestion().getAnswer())) {
 					System.out.println("you answered correctly and move into the next room");
 					next.setStatus(1);
 					return next;
 				} else {
-					System.out.println(
-							"you did not answer correctly, the correct answer is: " + next.getQuestion().getAnswer());
+					System.out.println("Incorrect! The correct answer was: " + next.getQuestion().getAnswer());
 					next.setStatus(-1);
 					return current;
 				}
@@ -152,8 +196,18 @@ public class Maze implements Serializable {
 			return current;
 		}
 	}
+	
+	private boolean checkBounds(int x, int y) {
+		
+		if(x < 1) return false;
+		if(y < 1) return false;
+		if(x > mazeArray.length - 2) return false;
+		if(y > mazeArray.length - 2) return false;
+		return true;
+ 	}
 
 	public boolean checkForPaths(Room[][] triviaMaze) {
+		
 		assert triviaMaze != null : "Maze is null";
 
 		int[][] pathTester = roomArrayToIntArray(triviaMaze);
