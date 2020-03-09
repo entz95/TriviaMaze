@@ -1,9 +1,16 @@
 package triviaMaze;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-
 import question.Question;
+
+/*
+ * Author: Justin Entz
+ * 
+ * Purpose: This class contains all data that room needs to hold and know
+ * 
+ * Version: 1.0
+ * 
+ */
 
 public class Room implements Serializable{
 
@@ -11,6 +18,7 @@ public class Room implements Serializable{
 	private String top;
 	private String mid;
 	private String bot;
+	private Question question;
 	private int status;
 	private Question question;
 		//1 for open
@@ -21,12 +29,12 @@ public class Room implements Serializable{
 		top = "- - -";
 		mid = "|   |";
 		bot = "- - -";
-		status = 0;
-		question = ques;
+		status = 1;
 	}
 	
-	public int getStatus() {
-		return this.status;
+	public static Room nullRoom() {
+		Room nullRoom = null;
+		return nullRoom;
 	}
 
 	public String getTop() {
@@ -45,40 +53,19 @@ public class Room implements Serializable{
 		this.status = status;
 	}
 	
-	public String displayQuestion() {
-		return question.getQuestion();
+	public int getStatus() {
+		return this.status;
+	}
+	public Question getQuestion() {
+		return this.question;
 	}
 	
-	public String displayOptions() {
+	public String displayQuestion(Question question) {
+		String toRet = "";
 		
-		String toRet = " | ";
-		ArrayList<String> options = question.getOptions();
-		for(String string: options) {
-			toRet += string + " | ";
-		}
+		toRet = toRet + question.getQuestion();
+		toRet = toRet + question.getOptions();
 		
 		return toRet;
 	}
-	
-	public boolean answerQuestion(String answer) {
-		
-		boolean correct = question.checkAnswer(answer);
-		
-		if(correct) {
-			setStatus(1);
-		} else {
-			setStatus(-1);
-		}
-		
-		return correct;
-	}
-	
-	/*
-	 * static generate a sealed room
-	 * 
-	 * create a question with blank data
-	 * set room to sealed
-	 * return the room
-	 * 
-	 */
 }

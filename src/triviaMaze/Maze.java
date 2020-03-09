@@ -1,13 +1,17 @@
 package triviaMaze;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Random;
 import java.util.Scanner;
 
-import application.DBGetter;
-import question.Question;
+/*
+ * Author: Justin Entz
+ * 
+ * Purpose: This class creates a maze object that is a 2d array of rooms, it moves the player from one room to the next, checks to see if you can still win the game and adjusts player position
+ * and room status.
+ * 
+ * Version: 1.0
+ * 
+ */
 
 //in the navigate maze class we might want to make a separate method that we call to display and answer the question and change room status from closed to open/sealed to see if they can then move so we have more readable code
 //and also implement another method that checks to see if there are any possible paths to the exit
@@ -19,10 +23,10 @@ public class Maze implements Serializable {
 	private int posX;
 	private int posY;
 
-	public Maze(int x, int y) {
-		
-		generateMaze(x, y);
-		
+	public Maze(int x) {
+		generateMaze(x, x);
+		this.posX = 1;
+		this.posY = 1;
 	}
 
 	private void generateMaze(int rows, int columns) {
@@ -32,8 +36,10 @@ public class Maze implements Serializable {
 
 		this.mazeArray = new Room[rows + 2][columns + 2];
 
-		for (Room[] row : mazeArray) {
-			Arrays.fill(row, null);
+		for (int i = 0; i <= rows; i++) {
+			for (int j = 0; j <= columns; j++) {
+				mazeArray[i][j] = Room.nullRoom();
+			}
 		}
 		
 		ArrayList<Question> questions = DBGetter.getAllQuestions();
@@ -67,37 +73,46 @@ public class Maze implements Serializable {
 		this.posY = y;
 	}
 
+	public Room[][] getMazeArray() {
+		return mazeArray;
+	}
+
 	public Room navigateMaze(String input) {
 		assert input != null : "input is not valid";
 
-		int targetX = this.posX;
-		int targetY = this.posY;
-		Room currentRoom = mazeArray[targetY][targetX];
-		Room nextRoom;
+		int currentXPosition = this.posX;
+		int currentYPosition = this.posY;
+		Room currentRoom = mazeArray[currentXPosition][currentYPosition];
+		Room nextRoom = new Room();
 
 		try {
 			switch (input) {
 			case ("Up"): // case for moving up/north
-				targetY = targetY - 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
+				currentYPosition = currentYPosition - 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			case ("Down"): // case for moving down/south
-				targetY = targetY + 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
+				currentYPosition = currentYPosition + 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			case ("Left"): // case for moving left/west
-				targetX = targetX - 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
+				currentXPosition = currentXPosition - 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			case ("Right"): // case for moving right/east
-				targetX = targetX + 1;
-				nextRoom = moveRoom(currentRoom, mazeArray[targetY][targetX]);
+				currentXPosition = currentXPosition + 1;
+				nextRoom = moveRoom(currentRoom, mazeArray[currentXPosition][currentYPosition]);
 				break;
 			default:
 				nextRoom = currentRoom;
 			}
-			setXPosition(targetX);
-			setYPosition(targetY);
+			if(nextRoom == null) {
+				setXPosition(this.posX);
+				setYPosition(this.posY);
+			}else {
+				setXPosition(currentXPosition);
+				setYPosition(currentYPosition);
+			}
 		} catch (ArrayIndexOutOfBoundsException e) {
 			System.out.println("You cannot move " + input);
 			return currentRoom;
@@ -107,39 +122,38 @@ public class Maze implements Serializable {
 	}
 
 	private Room moveRoom(Room current, Room next) {
-		if (next.getStatus() == -1) {// if room is sealed
-			System.out.println("Room is sealed");
-			return current;
-		} else if (next.getStatus() == 1) {// if room is open
-			System.out.println("room is open");
-			return next;
-		} else
-			// implement code for the question here
-			
-			System.out.println(next.displayQuestion());
-			System.out.println(next.displayOptions());
-			System.out.println();
-			System.out.print("Answer: ");
-		
-			Scanner kin = new Scanner(System.in);
-			
-			String answer = kin.nextLine();
-			
-			boolean correct = next.answerQuestion(answer);
-			
-			if(correct) {
-				System.out.println("Correct! Proceeding to next room...");
-				System.out.println();
-				return next;
-			} else {
-				System.out.println("Incorrect! Sealing room...");
-				System.out.println();
+
+		Scanner kb = new Scanner(System.in);
+
+		if (next != null) {
+
+			if (next.getStatus() == -1) {// if room is sealed
+				System.out.println("Room is sealed");
 				return current;
-			}
-			
+			} else if (next.getStatus() == 0) {// if room is closed
+				System.out.println("Room is locked. answer question correctly to progress.");
+				System.out.println(next.displayQuestion(next.getQuestion()));
+				String Useranswer = kb.nextLine();
+				if (Useranswer.equals(next.getQuestion().getAnswer())) {
+					System.out.println("you answered correctly and move into the next room");
+					next.setStatus(1);
+					return next;
+				} else {
+					System.out.println(
+							"you did not answer correctly, the correct answer is: " + next.getQuestion().getAnswer());
+					next.setStatus(-1);
+					return current;
+				}
+			} else
+				// room will be open if not locked or sealed
+				return next;
+		} else {
+			System.out.println("you cannot move there. Room is null.");
+			return current;
+		}
 	}
 
-	private boolean checkForPaths(Room[][] triviaMaze) {
+	public boolean checkForPaths(Room[][] triviaMaze) {
 		assert triviaMaze != null : "Maze is null";
 
 		int[][] pathTester = roomArrayToIntArray(triviaMaze);
@@ -198,4 +212,17 @@ public class Maze implements Serializable {
 		}
 		return line;
 	}
+
+	public Room setStart() {
+		return mazeArray[1][1];
+	}
+	
+	public Room getCurrentRoom() {
+		return mazeArray[posX][posY];
+	}
+
+	public Room getEnd() {
+		return mazeArray[mazeArray.length - 2][mazeArray.length - 2];
+	}
+
 }
