@@ -20,11 +20,12 @@ public class Room implements Serializable{
 	private String bot;
 	private Question question;
 	private int status;
+	private Question question;
 		//1 for open
 		//0 for locked
 		//-1 for sealed
 	
-	public Room() {
+	public Room(Question ques) {
 		top = "- - -";
 		mid = "|   |";
 		bot = "- - -";
@@ -48,7 +49,7 @@ public class Room implements Serializable{
 		return this.bot;
 	}
 
-	public void setStatus(int status) {
+	private void setStatus(int status) {
 		this.status = status;
 	}
 	

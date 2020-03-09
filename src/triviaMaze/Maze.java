@@ -30,6 +30,7 @@ public class Maze implements Serializable {
 	}
 
 	private void generateMaze(int rows, int columns) {
+		
 		assert rows > 0 : "rows is zero or less";
 		assert columns > 0 : "columns is zero or less";
 
@@ -40,12 +41,20 @@ public class Maze implements Serializable {
 				mazeArray[i][j] = Room.nullRoom();
 			}
 		}
+		
+		ArrayList<Question> questions = DBGetter.getAllQuestions();
+		Random rng = new Random();
 
 		for (int i = 1; i <= rows; i++) {
+			
 			for (int j = 1; j <= columns; j++) {
-				mazeArray[i][j] = new Room();
+				int index = rng.nextInt(questions.size());
+				mazeArray[i][j] = new Room(questions.get(index));
+				
 			}
+			
 		}
+		
 	}
 
 	public int getXPosition() {
