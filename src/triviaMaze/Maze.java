@@ -34,35 +34,35 @@ public class Maze implements Serializable {
 	}
 
 	private void generateMaze(int rows, int columns) {
-		
+
 		assert rows > 0 : "rows is zero or less";
 		assert columns > 0 : "columns is zero or less";
 
 		this.mazeArray = new Room[rows + 2][columns + 2];
 
 		for (int i = 0; i <= rows; i++) {
-			
+
 			for (int j = 0; j <= columns; j++) {
-				
+
 				mazeArray[i][j] = Room.nullRoom();
 			}
-			
+
 		}
-		
+
 		ArrayList<Question> questions = DBGetter.getAllQuestions();
 		Random rng = new Random();
 
 		for (int i = 1; i <= rows; i++) {
-			
+
 			for (int j = 1; j <= columns; j++) {
-				
+
 				int index = rng.nextInt(questions.size());
-				mazeArray[i][j] = new Room(questions.get(index));
-				
+				mazeArray[i][j] = new Room(questions.get(index), i , j);
+
 			}
-			
+
 		}
-		
+
 	}
 
 	public int getXPosition() {
@@ -97,73 +97,70 @@ public class Maze implements Serializable {
 
 		try {
 			switch (input) {
-			
-			case ("Up"): // case for moving up/north
-				if(checkBounds(playerY, playerX - 1)) {
-					
-				playerX = playerX - 1;
 
-				}else {
+			case ("Up"): // case for moving up/north
+				if (checkBounds(playerY, playerX - 1)) {
+
+					playerX = playerX - 1;
+
+				} else {
 					System.out.println("You cannot move " + input);
 				}
-			
-				nextRoom = moveRoom(currentRoom, mazeArray[playerX][playerY]);
+				nextRoom = mazeArray[playerX][playerY];
+				nextRoom = moveRoom(currentRoom, nextRoom);
 				break;
-				
+
 			case ("Down"): // case for moving down/south
-				if(checkBounds(playerY, playerX + 1)) {
-				
+				if (checkBounds(playerY, playerX + 1)) {
+
 					playerX = playerX + 1;
 
-				}else {
+				} else {
 					System.out.println("You cannot move " + input);
 				}
-			
-				nextRoom = moveRoom(currentRoom, mazeArray[playerX][playerY]);
+				nextRoom = mazeArray[playerX][playerY];
+				nextRoom = moveRoom(currentRoom, nextRoom);
 				break;
-				
+
 			case ("Left"): // case for moving left/west
-				if(checkBounds(playerY - 1, playerX)) {
-					
+				if (checkBounds(playerY - 1, playerX)) {
+
 					playerY = playerY - 1;
-					
-					}else {
-						System.out.println("You cannot move " + input);
-					}
-				
-					nextRoom = moveRoom(currentRoom, mazeArray[playerX][playerY]);
-					break;
-				
+
+				} else {
+					System.out.println("You cannot move " + input);
+				}
+				nextRoom = mazeArray[playerX][playerY];
+				nextRoom = moveRoom(currentRoom, nextRoom);
+				break;
+
 			case ("Right"): // case for moving right/east
-				if(checkBounds(playerY + 1, playerX)) {
-					
+				if (checkBounds(playerY + 1, playerX)) {
+
 					playerY = playerY + 1;
 
-					}else {
-						System.out.println("You cannot move " + input);
-					}
-				
-					nextRoom = moveRoom(currentRoom, mazeArray[playerX][playerY]);
-					break;
-				
+				} else {
+					System.out.println("You cannot move " + input);
+				}
+				nextRoom = mazeArray[playerX][playerY];
+				nextRoom = moveRoom(currentRoom, nextRoom);
+				break;
+
 			default:
 				nextRoom = currentRoom;
 			}
-				if(nextRoom.getStatus() == -1) {
-					setXPosition(startX);
-					setYPosition(startY);
-				}else {
-				setXPosition(playerX);
-				setYPosition(playerY);
-				}
-				
-		} catch (ArrayIndexOutOfBoundsException e) {
 			
+				setXPosition(nextRoom.getXRoomPosition());
+				setYPosition(nextRoom.getYRoomPosition());
+			
+
+		} catch (ArrayIndexOutOfBoundsException e) {
+
 			System.out.println("You cannot move " + input);
 			return currentRoom;
-			
+
 		}
-		
+
 		return nextRoom;
 
 	}
@@ -178,20 +175,19 @@ public class Maze implements Serializable {
 				System.out.println("Room is sealed");
 				return current;
 			} else if (next.getStatus() == 0) {// if room is closed
-				
+
 				System.out.println("Room is locked. Answer question correctly to progress.");
-				System.out.println(next.getQuestion().getAnswer());
-				System.out.println(next.getQuestion().getOptions().toString());
+				System.out.println(next.displayQuestion(next.getQuestion()));
 				System.out.println();
-				
+
 				String Useranswer = kb.nextLine();
-				
-				if (Useranswer.equals(next.getQuestion().getAnswer())) {
+
+				if (next.getQuestion().checkAnswer(Useranswer)) {
 					System.out.println("you answered correctly and move into the next room");
 					next.setStatus(1);
 					return next;
 				} else {
-					System.out.println("Incorrect! The correct answer was: " + next.getQuestion().getAnswer());
+					System.out.println("Incorrect! The correct answer was: " + next.getQuestion().getQuestion());
 					next.setStatus(-1);
 					return current;
 				}
@@ -203,18 +199,22 @@ public class Maze implements Serializable {
 			return current;
 		}
 	}
-	
+
 	private boolean checkBounds(int x, int y) {
-		
-		if(x < 1) return false;
-		if(y < 1) return false;
-		if(x > mazeArray.length - 2) return false;
-		if(y > mazeArray.length - 2) return false;
+
+		if (x < 1)
+			return false;
+		if (y < 1)
+			return false;
+		if (x > mazeArray.length - 2)
+			return false;
+		if (y > mazeArray.length - 2)
+			return false;
 		return true;
- 	}
+	}
 
 	public boolean checkForPaths(Room[][] triviaMaze) {
-		
+
 		assert triviaMaze != null : "Maze is null";
 
 		int[][] pathTester = roomArrayToIntArray(triviaMaze);
@@ -273,7 +273,7 @@ public class Maze implements Serializable {
 		}
 		return line;
 	}
-	
+
 	public Room getCurrentRoom() {
 		return mazeArray[posY][posX];
 	}
@@ -281,31 +281,31 @@ public class Maze implements Serializable {
 	public Room getEnd() {
 		return mazeArray[mazeArray.length - 2][mazeArray.length - 2];
 	}
-	
+
 	private void setEnd() {
 		mazeArray[mazeArray.length - 2][mazeArray.length - 2].setMid("| E |");
 	}
-	
+
 	private void setStart() {
 		mazeArray[1][1].setMid("| S |");
 	}
-	
+
 	public void setPlayerPosition() {
 		mazeArray[posX][posY].setMid("| P |");
 	}
-	
+
 	public static void mazeSetup(Maze triviaMaze) {
-		for(int i = 1;i < triviaMaze.mazeArray.length - 1;i++) {
-			for(int j = 1;j < triviaMaze.mazeArray[0].length - 1;j++) {
-				if(triviaMaze.mazeArray[i][j].getStatus() == -1)
+		for (int i = 1; i < triviaMaze.mazeArray.length - 1; i++) {
+			for (int j = 1; j < triviaMaze.mazeArray[0].length - 1; j++) {
+				if (triviaMaze.mazeArray[i][j].getStatus() == -1)
 					triviaMaze.mazeArray[i][j].setMid("| X |");
-				else if(triviaMaze.mazeArray[i][j].getStatus() == 0)
+				else if (triviaMaze.mazeArray[i][j].getStatus() == 0)
 					triviaMaze.mazeArray[i][j].setMid("| L |");
 				else
 					triviaMaze.mazeArray[i][j].setMid("| O |");
 			}
 		}
-		
+
 		triviaMaze.setStart();
 		triviaMaze.setEnd();
 		triviaMaze.setPlayerPosition();

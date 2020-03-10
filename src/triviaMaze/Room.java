@@ -15,6 +15,8 @@ import question.Question;
 public class Room implements Serializable {
 
 	private static final long serialVersionUID = 4880979877529404810L;
+	private int xPos;
+	private int yPos;
 	private String top;
 	private String mid;
 	private String bot;
@@ -24,12 +26,22 @@ public class Room implements Serializable {
 		//0 for locked
 		//-1 for sealed
 	
-	public Room(Question ques) {
+	public Room(Question ques, int x, int y) {
 		top = "- - -";
 		mid = "|   |";
 		bot = "- - -";
 		status = 0;
 		this.question = ques;
+		this.xPos = x;
+		this.yPos = y;
+	}
+	
+	public Room(Question question) {
+		top = "- - -";
+		mid = "|   |";
+		bot = "- - -";
+		status = 0;
+		this.question = question;
 	}
 	
 	public static Room nullRoom() {
@@ -67,7 +79,7 @@ public class Room implements Serializable {
 	public String displayQuestion(Question question) {
 		String toRet = "";
 		
-		toRet = toRet + question.getQuestion();
+		toRet = toRet + question.getAnswer();
 		toRet = toRet + question.getOptions();
 		
 		return toRet;
@@ -77,4 +89,21 @@ public class Room implements Serializable {
 		this.mid = newMid;
 		
 	}
+
+	public int getXRoomPosition() {
+		return xPos;
+	}
+
+	public void setXRoomPosition(int xPos) {
+		this.xPos = xPos;
+	}
+
+	public int getYRoomPosition() {
+		return yPos;
+	}
+	
+	public void setYRoomPosition(int yPos) {
+		this.yPos = yPos;
+	}
+
 }

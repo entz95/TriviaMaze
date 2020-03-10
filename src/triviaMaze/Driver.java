@@ -39,7 +39,7 @@ public class Driver {
 				
 			} else if (!triviaMaze.checkForPaths(triviaMaze.getMazeArray())) {
 				
-				System.out.println("You Lose!");
+				System.out.println("No more paths to the exit, You Lose!");
 				
 			}
 			keepPlaying = playAgain(kb);
