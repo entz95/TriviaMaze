@@ -26,9 +26,9 @@ public class Room implements Serializable {
 	
 	public Room(Question ques) {
 		top = "- - -";
-		mid = "| O |";
+		mid = "|   |";
 		bot = "- - -";
-		status = 1;
+		status = 0;
 		this.question = ques;
 	}
 	
@@ -71,5 +71,10 @@ public class Room implements Serializable {
 		toRet = toRet + question.getOptions();
 		
 		return toRet;
+	}
+
+	public void setMid(String newMid) {
+		this.mid = newMid;
+		
 	}
 }
