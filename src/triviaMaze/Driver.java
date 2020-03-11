@@ -7,7 +7,7 @@ import java.util.Scanner;
  * 
  * Purpose: This class is current acting as the driver/testing file that will display options to the player and call maze methods
  * 
- * Version: 0.1
+ * Version: 1.0
  * 
  */
 
@@ -49,14 +49,14 @@ public class Driver {
 	private static int chooseDifficulty(Scanner kb) {
 		int choice = 0;
 		do {
-			System.out.println("What difficulty do you want?\n" + "1. Easy\n" + "2. Medium\n" + "3. Hard\n");
+			System.out.println("What difficulty do you want?\n" + "1. Normal\n" + "2. Hard\n" + "3. Harder\n");
 			try {
 				choice = kb.nextInt();
 				kb.nextLine();
 			} catch (Exception e) {
 				System.out.println("Please choose a valid number(1, 2, or 3)");
 			}
-		} while (choice < 1 || choice > 3);
+		} while (choice < 1 || choice > 3 && choice != 1938);//add secret option here for a 2x2 code: 1938
 
 		return choice;
 	}
@@ -64,11 +64,13 @@ public class Driver {
 	private static int setDifficulty(int difficulty) {
 		switch (difficulty) {
 		case 1:
-			return 2;
-		case 2:
 			return 4;
+		case 2:
+			return 5;
 		case 3:
 			return 6;
+		case 1938:
+			return 2;
 		default:
 			throw new IllegalArgumentException("Invalid Difficulty");
 		}

@@ -17,9 +17,6 @@ import question.Question;
  * 
  */
 
-//in the navigate maze class we might want to make a separate method that we call to display and answer the question and change room status from closed to open/sealed to see if they can then move so we have more readable code
-//and also implement another method that checks to see if there are any possible paths to the exit
-
 public class Maze implements Serializable {
 
 	private static final long serialVersionUID = -6846687447036983692L;
@@ -62,7 +59,7 @@ public class Maze implements Serializable {
 			}
 
 		}
-
+		
 	}
 
 	public int getXPosition() {
@@ -88,18 +85,16 @@ public class Maze implements Serializable {
 	public Room navigateMaze(String input) {
 		assert input != null : "input is not valid";
 
-		int startX = this.posX;
-		int startY = this.posY;
 		int playerX = this.posX;
 		int playerY = this.posY;
-		Room currentRoom = mazeArray[playerY][playerX];
+		Room currentRoom = mazeArray[playerX][playerY];
 		Room nextRoom;
 
 		try {
 			switch (input) {
 
 			case ("Up"): // case for moving up/north
-				if (checkBounds(playerY, playerX - 1)) {
+				if (checkBounds(playerX - 1, playerY)) {
 
 					playerX = playerX - 1;
 
@@ -111,7 +106,7 @@ public class Maze implements Serializable {
 				break;
 
 			case ("Down"): // case for moving down/south
-				if (checkBounds(playerY, playerX + 1)) {
+				if (checkBounds(playerX + 1, playerY)) {
 
 					playerX = playerX + 1;
 
@@ -123,7 +118,7 @@ public class Maze implements Serializable {
 				break;
 
 			case ("Left"): // case for moving left/west
-				if (checkBounds(playerY - 1, playerX)) {
+				if (checkBounds(playerX, playerY - 1)) {
 
 					playerY = playerY - 1;
 
@@ -135,7 +130,7 @@ public class Maze implements Serializable {
 				break;
 
 			case ("Right"): // case for moving right/east
-				if (checkBounds(playerY + 1, playerX)) {
+				if (checkBounds(playerX, playerY + 1)) {
 
 					playerY = playerY + 1;
 
