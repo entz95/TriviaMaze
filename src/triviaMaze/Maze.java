@@ -100,48 +100,56 @@ public class Maze implements Serializable {
 				if (checkBounds(playerX - 1, playerY)) {
 
 					playerX = playerX - 1;
+					nextRoom = mazeArray[playerX][playerY];
+					nextRoom = moveRoom(currentRoom, nextRoom);
 
 				} else {
 					System.out.println("You cannot move " + input);
+					nextRoom = currentRoom;
+					
 				}
-				nextRoom = mazeArray[playerX][playerY];
-				nextRoom = moveRoom(currentRoom, nextRoom);
+//				nextRoom = mazeArray[playerX][playerY];
+//				nextRoom = moveRoom(currentRoom, nextRoom);
 				break;
 
 			case ("Down"): // case for moving down/south
 				if (checkBounds(playerX + 1, playerY)) {
 
 					playerX = playerX + 1;
+					nextRoom = mazeArray[playerX][playerY];
+					nextRoom = moveRoom(currentRoom, nextRoom);
 
 				} else {
 					System.out.println("You cannot move " + input);
+					nextRoom = currentRoom;
 				}
-				nextRoom = mazeArray[playerX][playerY];
-				nextRoom = moveRoom(currentRoom, nextRoom);
+				
 				break;
 
 			case ("Left"): // case for moving left/west
 				if (checkBounds(playerX, playerY - 1)) {
 
 					playerY = playerY - 1;
+					nextRoom = mazeArray[playerX][playerY];
+					nextRoom = moveRoom(currentRoom, nextRoom);
 
 				} else {
 					System.out.println("You cannot move " + input);
+					nextRoom = currentRoom;
 				}
-				nextRoom = mazeArray[playerX][playerY];
-				nextRoom = moveRoom(currentRoom, nextRoom);
 				break;
 
 			case ("Right"): // case for moving right/east
 				if (checkBounds(playerX, playerY + 1)) {
 
 					playerY = playerY + 1;
+					nextRoom = mazeArray[playerX][playerY];
+					nextRoom = moveRoom(currentRoom, nextRoom);
 
 				} else {
 					System.out.println("You cannot move " + input);
+					nextRoom = currentRoom;
 				}
-				nextRoom = mazeArray[playerX][playerY];
-				nextRoom = moveRoom(currentRoom, nextRoom);
 				break;
 
 			default:
@@ -185,7 +193,7 @@ public class Maze implements Serializable {
 					next.setStatus(1);
 					return next;
 				} else {
-					System.out.println("Incorrect! The correct answer was: " + next.getQuestion().getQuestion());
+					System.out.println("Incorrect! The correct answer was: " + next.getQuestion().getAnswer());
 					next.setStatus(-1);
 					return current;
 				}
@@ -286,6 +294,7 @@ public class Maze implements Serializable {
 
 	private void setStart() {
 		mazeArray[1][1].setMid("| S |");
+		mazeArray[1][1].setStatus(1);
 	}
 
 	public void setPlayerPosition() {

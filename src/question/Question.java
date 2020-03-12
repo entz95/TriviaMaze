@@ -16,7 +16,7 @@ public abstract class Question {
 	private String question;
 	private String answer;
 	
-	public Question(String ans, String ques) {
+	public Question(String ques, String ans) {
 		this.question = ques;
 		this.answer = ans;
 	}
@@ -30,7 +30,7 @@ public abstract class Question {
 	}
 	
 	public boolean checkAnswer(String givenAnswer) {
-		if(question.toLowerCase().equals(givenAnswer.toLowerCase())) {
+		if(answer.toLowerCase().equals(givenAnswer.toLowerCase())) {
 			return true;
 		} else {
 			return false;
