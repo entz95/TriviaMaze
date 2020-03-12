@@ -7,7 +7,7 @@ import java.util.Scanner;
  * 
  * Purpose: This class is current acting as the driver/testing file that will display options to the player and call maze methods
  * 
- * Version: 0.1
+ * Version: 1.0
  * 
  */
 
@@ -19,20 +19,28 @@ public class Driver {
 		boolean keepPlaying = false;
 
 		do {
+			
 			int difficulty = chooseDifficulty(kb);
 			Maze triviaMaze = new Maze(setDifficulty(difficulty));
 			Room currentRoom = triviaMaze.getMazeArray()[1][1];
-
+			
 			do {
+				
+				Maze.mazeSetup(triviaMaze);
 				System.out.println(triviaMaze.toString());
-
 				int directionChoice = chooseDirection(kb);
 				currentRoom = movePlayer(directionChoice, triviaMaze, currentRoom);
+				
 			} while (triviaMaze.checkForPaths(triviaMaze.getMazeArray()) && currentRoom != triviaMaze.getEnd());
+			
 			if (triviaMaze.getCurrentRoom() == triviaMaze.getEnd()) {
+				
 				System.out.println("You Win!");
+				
 			} else if (!triviaMaze.checkForPaths(triviaMaze.getMazeArray())) {
-				System.out.println("You Lose!");
+				
+				System.out.println("No more paths to the exit, You Lose!");
+				
 			}
 			keepPlaying = playAgain(kb);
 		} while (keepPlaying);
@@ -41,14 +49,14 @@ public class Driver {
 	private static int chooseDifficulty(Scanner kb) {
 		int choice = 0;
 		do {
-			System.out.println("What difficulty do you want?\n" + "1. Easy\n" + "2. Medium\n" + "3. Hard\n");
+			System.out.println("What difficulty do you want?\n" + "1. Normal\n" + "2. Hard\n" + "3. Harder\n");
 			try {
 				choice = kb.nextInt();
 				kb.nextLine();
 			} catch (Exception e) {
 				System.out.println("Please choose a valid number(1, 2, or 3)");
 			}
-		} while (choice < 1 || choice > 3);
+		} while (choice < 1 || choice > 3 && choice != 1938);//add secret option here for a 2x2 code: 1938
 
 		return choice;
 	}
@@ -56,11 +64,13 @@ public class Driver {
 	private static int setDifficulty(int difficulty) {
 		switch (difficulty) {
 		case 1:
-			return 2;
-		case 2:
 			return 4;
+		case 2:
+			return 5;
 		case 3:
 			return 6;
+		case 1938:
+			return 2;
 		default:
 			throw new IllegalArgumentException("Invalid Difficulty");
 		}
@@ -106,9 +116,4 @@ public class Driver {
 		return (again.equals("Y") || again.equals("y"));
 	}
 
-	public String getAnswer(Scanner kb) {
-		System.out.println("Choose an answer");
-		String userAnswer = kb.nextLine();
-		return userAnswer;
-	}
 }

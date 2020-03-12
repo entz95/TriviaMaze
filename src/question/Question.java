@@ -30,7 +30,7 @@ public abstract class Question {
 	}
 	
 	public boolean checkAnswer(String givenAnswer) {
-		if(answer.toLowerCase().equals(givenAnswer.toLowerCase())) {
+		if(question.toLowerCase().equals(givenAnswer.toLowerCase())) {
 			return true;
 		} else {
 			return false;
