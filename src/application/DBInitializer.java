@@ -14,20 +14,18 @@ import java.util.Scanner;
  * The purpose of this class is to allow the database to be reset to a default state, should something ever happen
  * to the database that would make the game unable to be played properly. 
  * 
- * Version: 0.7
+ * Version: 1.0
  * 
  */
 
 public class DBInitializer {
 	
-	public static void initializeTrueFalse() {
+	public static boolean initializeTrueFalse() {
 		Connection conn = null;
 
 		try {
 			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager.getConnection("jdbc:sqlite:questions.db");
-			
-			System.out.println("Connection established...");
 
 			Statement stmt = conn.createStatement();
 			
@@ -45,8 +43,6 @@ public class DBInitializer {
 						+ "QUESTION		TEXT	NOT NULL," + "ANSWER	TEXT	NOT NULL)";
 				stmt.executeUpdate(sql);
 			}
-			
-			System.out.println("Table created...");
 			
 			File source = new File("./trueFalse.txt");
 			if(source.exists() && source.canRead()) {
@@ -66,30 +62,24 @@ public class DBInitializer {
 				fin.close();
 			}
 			
-			System.out.println("Added tuples to table...");
-			
 			stmt.close();
 			conn.close();
 			conn = null;
 			
-			System.out.println("All connections closed...");
+			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			return false;
 		}
 	}
 	
-	public static void initializeMultipleChoice() {
-		//TODO Fill in for multiple choice table
-		
+	public static boolean initializeMultipleChoice() {
 		Connection conn = null;
 
 		try {
 			Class.forName("org.sqlite.JDBC");
 			conn = DriverManager.getConnection("jdbc:sqlite:questions.db");
-			
-			System.out.println("Connection established...");
 
 			Statement stmt = conn.createStatement();
 			
@@ -111,8 +101,6 @@ public class DBInitializer {
 						+ " OPTION_C 	TEXT 	NOT NULL, OPTION_D 	TEXT 	NOT NULL)";
 				stmt.executeUpdate(sql);
 			}
-			
-			System.out.println("Table created...");
 			
 			File source = new File("./multipleChoice.txt");
 			if(source.exists() && source.canRead()) {
@@ -137,28 +125,21 @@ public class DBInitializer {
 				fin.close();
 			}
 			
-			System.out.println("Added tuples to table...");
-			
 			stmt.close();
 			conn.close();
 			conn = null;
 			
-			System.out.println("All connections closed...");
+			return true;
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			System.exit(0);
+			return false;
 		}
 	
 	}
 	
-//	This main is for testing this class. Remove before final testing.
-//	public static void main(String[] args) {
-//		
-//		DBInitializer.initializeTrueFalse();
-//		DBInitializer.initializeMultipleChoice();
-//		
-//		//System.out.println("Hello world");
-//		
-//	}
+	public static void main(String[] args) {
+		initializeTrueFalse();
+		initializeMultipleChoice();
+	}
 }

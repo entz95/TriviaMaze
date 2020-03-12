@@ -1,7 +1,12 @@
 package triviaMaze;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Random;
 import java.util.Scanner;
+
+import application.DBGetter;
+import question.Question;
 
 /*
  * Author: Justin Entz
@@ -83,7 +88,7 @@ public class Maze implements Serializable {
 		int currentXPosition = this.posX;
 		int currentYPosition = this.posY;
 		Room currentRoom = mazeArray[currentXPosition][currentYPosition];
-		Room nextRoom = new Room();
+		Room nextRoom;
 
 		try {
 			switch (input) {
