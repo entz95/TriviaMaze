@@ -2,6 +2,7 @@ package application;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -11,33 +12,36 @@ import java.sql.Statement;
  * The purpose of this class is to allow records to be added to the database tables to allow for greater question
  * varity and aid with testing.
  * 
- * Version: 
+ * Version: 1.0
  */
 
 public class DBUpdater {
 	
 	public static boolean updateTrueFalse(String question, String answer) {
-		Connection c = null;
+		Connection conn = null;
 		
 		try {
 			Class.forName("org.sqlite.JDBC");
-			c = DriverManager.getConnection("jdbc:sqlite:questions.db");
+			conn = DriverManager.getConnection("jdbc:sqlite:questions.db");
 			
-			Statement stmt = c.createStatement();
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER)" +
+										"VALUES(?, ?, ?)");
 			
-			String sql = "";
-			ResultSet result = stmt.executeQuery("SELECT MAX(ID) FROM TRUE_FALSE");
+			Statement getID = conn.createStatement();
+			ResultSet result = getID.executeQuery("SELECT MAX(ID) FROM TRUE_FALSE");
 			
 			int newID = result.getInt(1) + 1;
 			
-			sql += "INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER) " +
-					"VALUES (" + newID + ",'" + question + "', '" + answer +"')";
+			stmt.setInt(1,  newID);
+			stmt.setString(2, question);
+			stmt.setString(3, answer);
 			
-			stmt.executeUpdate(sql);
+			
+			stmt.executeUpdate();
 			
 			stmt.close();
-			c.close();
-			c = null;
+			conn.close();
+			conn = null;
 			
 			return true;
 			
@@ -47,18 +51,42 @@ public class DBUpdater {
 		}
 	}
 	
-	public static boolean updateMultipleChoice() {
-		//TODO Add update funtionality
-		
-		return false;
+	public static boolean updateMultipleChoice(String question, String answer, String optA,
+												String optB, String optC, String optD) {
+		Connection conn = null;
+
+		try {
+			Class.forName("org.sqlite.JDBC");
+			conn = DriverManager.getConnection("jdbc:sqlite:questions.db");
+
+			PreparedStatement stmt = conn.prepareStatement("INSERT INTO MULTIPLE_CHOICE" + 
+			" (ID, QUESTION, ANSWER, OPTION_A, OPTION_B, OPTION_C, OPTION_D) VALUES(?, ?, ?, ?, ?, ?, ?)");
+			
+			Statement getID = conn.createStatement();
+			// String sql = "";
+			ResultSet result = getID.executeQuery("SELECT MAX(ID) FROM MULTIPLE_CHOICE");
+
+			int newID = result.getInt(1) + 1;
+
+			stmt.setInt(1, newID);
+			stmt.setString(2, question);
+			stmt.setString(3, answer);
+			stmt.setString(4, optA);
+			stmt.setString(5, optB);
+			stmt.setString(6, optC);
+			stmt.setString(7, optD);
+
+			stmt.executeUpdate();
+
+			stmt.close();
+			conn.close();
+			conn = null;
+
+			return true;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
-	
-	//Main for testing preliminary functionality of DBUpdater
-//	public static void main(String[] args) {
-//		
-//		boolean result = DBUpdater.updateTrueFalse("A longsword can deal 1d10 damage.", "TRUE");
-//		System.out.println(result);
-//		
-//	}
-	
 }

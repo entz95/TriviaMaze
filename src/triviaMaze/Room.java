@@ -80,8 +80,8 @@ public class Room implements Serializable {
 	public String displayQuestion(Question question) {
 		String toRet = "";
 		
-		toRet = toRet + question.getAnswer();
-		toRet = toRet + question.getOptions();
+		toRet = toRet + question.getQuestion();
+		toRet = toRet + " Options:" + question.getOptions();
 		
 		return toRet;
 	}
