@@ -46,6 +46,7 @@ public class Room implements Serializable {
 	
 	public static Room nullRoom() {
 		Room nullRoom = new Room(null);
+		nullRoom.question = null;
 		nullRoom.status = -1;
 		nullRoom.top = "# # #";
 		nullRoom.mid = "# # #";
