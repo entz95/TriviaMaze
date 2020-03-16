@@ -120,6 +120,7 @@ public class Driver {
 				System.out.println("Could not save trivia maze state...");
 				e.printStackTrace();
 			}
+			break;
 		case 6:
 			try {
 				ArrayList<Object> saves = loadFile();
@@ -129,9 +130,11 @@ public class Driver {
 				System.out.println("Could not load trivia maze");
 				e.printStackTrace();
 			}
+			break;
 		default:
 			throw new IllegalArgumentException("Invalid Action");
 		}
+		return currentRoom;
 	}
 	
 	private static final void saveState(Maze maze, Room currentRoom) throws IOException {
@@ -157,7 +160,7 @@ public class Driver {
 			ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile));
 			toLoad = (ArrayList<Object>) in.readObject();
 			in.close();
-			System.out.println("Adventure loaded!");
+			System.out.println("Maze loaded!");
 		} catch(IOException e) {
 			e.printStackTrace();
 		}

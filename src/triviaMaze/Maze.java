@@ -85,6 +85,8 @@ public class Maze implements Serializable {
 		if(maze == null) 
 			throw new IllegalArgumentException("The maze that was passed in is null");
 		this.mazeArray = maze.mazeArray;
+		this.posX = maze.posX;
+		this.posY = maze.posY;
 	}
 
 	public Room navigateMaze(String input) {

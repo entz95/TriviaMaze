@@ -1,5 +1,6 @@
 package question;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
@@ -12,7 +13,9 @@ import java.util.ArrayList;
  * 
  */
 
-public abstract class Question {
+public abstract class Question implements Serializable{
+
+	private static final long serialVersionUID = 2740654142557678915L;
 	private String question;
 	private String answer;
 	
