@@ -5,11 +5,9 @@ import question.Question;
 
 /*
  * Author: Justin Entz
- * 
  * Purpose: This class contains all data that room needs to hold and know
- * 
+ * Date Modified 3/16/2020
  * Version: 1.0
- * 
  */
 
 public class Room implements Serializable {
@@ -52,6 +50,18 @@ public class Room implements Serializable {
 		nullRoom.mid = "# # #";
 		nullRoom.bot = "# # #";
 		return nullRoom;
+	}
+	
+	public void setRoom(Room room) {
+		if(room == null)
+			throw new IllegalArgumentException("The room passed in is null");
+		this.top = room.top;
+		this.mid = room.mid;
+		this.bot = room.bot;
+		this.status = room.status;
+		this.question = room.question;
+		this.xPos = room.xPos;
+		this.yPos = room.yPos;
 	}
 
 	public String getTop() {

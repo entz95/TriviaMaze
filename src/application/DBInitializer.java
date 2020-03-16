@@ -138,8 +138,4 @@ public class DBInitializer {
 	
 	}
 	
-	public static void main(String[] args) {
-		initializeTrueFalse();
-		initializeMultipleChoice();
-	}
 }

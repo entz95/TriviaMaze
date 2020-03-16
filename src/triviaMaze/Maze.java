@@ -7,15 +7,11 @@ import java.util.Scanner;
 import application.DBGetter;
 import question.Question;
 
-import application.DBGetter;
-import question.Question;
-
 /*
  * Author: Justin Entz
- * 
  * Purpose: This class creates a maze object that is a 2d array of rooms, it moves the player from one room to the next, checks to see if you can still win the game and adjusts player position
  * and room status.
- * 
+ * Date Modified 3/16/2020
  * Version: 1.0
  * 
  */
@@ -83,6 +79,12 @@ public class Maze implements Serializable {
 
 	public Room[][] getMazeArray() {
 		return mazeArray;
+	}
+	
+	public void setMaze(Maze maze) {
+		if(maze == null) 
+			throw new IllegalArgumentException("The maze that was passed in is null");
+		this.mazeArray = maze.mazeArray;
 	}
 
 	public Room navigateMaze(String input) {
@@ -173,6 +175,7 @@ public class Maze implements Serializable {
 
 	private Room moveRoom(Room current, Room next) {
 
+		@SuppressWarnings("resource")
 		Scanner kb = new Scanner(System.in);
 
 		if (next != null) {
@@ -185,7 +188,6 @@ public class Maze implements Serializable {
 				System.out.println("Room is locked. Answer question correctly to progress.");
 				System.out.println(next.displayQuestion(next.getQuestion()));
 				System.out.println();
-
 				String Useranswer = kb.nextLine();
 
 				if (next.getQuestion().checkAnswer(Useranswer)) {

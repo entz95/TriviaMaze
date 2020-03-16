@@ -1,20 +1,30 @@
 package triviaMaze;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.Scanner;
+
+import application.DBInitializer;
 
 /*
  * Author: Justin Entz
- * 
  * Purpose: This class is current acting as the driver/testing file that will display options to the player and call maze methods
- * 
- * Version: 1.0
+ * Date Modified 3/16/2020
+ * Version: 0.9
  * 
  */
 
 public class Driver {
 
 	public static void main(String[] args) {
-
+		
+		DBInitializer.initializeMultipleChoice();
+		DBInitializer.initializeTrueFalse();
 		Scanner kb = new Scanner(System.in);
 		boolean keepPlaying = false;
 
@@ -45,6 +55,7 @@ public class Driver {
 			keepPlaying = playAgain(kb);
 		} while (keepPlaying);
 	}
+	
 
 	private static int chooseDifficulty(Scanner kb) {
 		int choice = 0;
@@ -80,14 +91,14 @@ public class Driver {
 		int choice = 0;
 		do {
 			System.out.println("What do you want to do?\n" + "1. Move Up\n" + "2. Move Down\n" + "3. Move Left\n"
-					+ "4. Move Right\n");
+					+ "4. Move Right\n" + "5. Save Game\n" + "6. Load Game\n");
 			try {
 				choice = kb.nextInt();
 				kb.nextLine();
 			} catch (Exception e) {
-				System.out.println("Please choose a valid number(1-4)");
+				System.out.println("Please choose a valid number(1-6)");
 			}
-		} while (choice < 0 || choice > 4);
+		} while (choice < 0 || choice > 6);
 
 		return choice;
 	}
@@ -102,9 +113,55 @@ public class Driver {
 			return currentRoom = maze.navigateMaze("Left");
 		case 4:
 			return currentRoom = maze.navigateMaze("Right");
+		case 5:
+			try {
+				saveState(maze, currentRoom);
+			} catch(Exception e){
+				System.out.println("Could not save trivia maze state...");
+				e.printStackTrace();
+			}
+		case 6:
+			try {
+				ArrayList<Object> saves = loadFile();
+				maze.setMaze((Maze)saves.get(0));
+				currentRoom.setRoom((Room)saves.get(1));
+			} catch(Exception e) {
+				System.out.println("Could not load trivia maze");
+				e.printStackTrace();
+			}
 		default:
 			throw new IllegalArgumentException("Invalid Action");
 		}
+	}
+	
+	private static final void saveState(Maze maze, Room currentRoom) throws IOException {
+		ArrayList<Object> toSave = new ArrayList<Object>();
+		toSave.add(maze);
+		toSave.add(currentRoom);
+		try {
+			File SaveFile = new File("./SaveGame");
+			ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(SaveFile));
+			out.writeObject(toSave);
+			out.close();
+			System.out.println("...Trivia Maze Saved...");
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	private static final ArrayList<Object> loadFile() throws IOException, ClassNotFoundException {
+		ArrayList<Object> toLoad = new ArrayList<Object>();
+		try {
+			File saveFile = new File("./SaveGame");
+			ObjectInputStream in = new ObjectInputStream(new FileInputStream(saveFile));
+			toLoad = (ArrayList<Object>) in.readObject();
+			in.close();
+			System.out.println("Adventure loaded!");
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		return toLoad;
 	}
 
 	private static boolean playAgain(Scanner kb) {
