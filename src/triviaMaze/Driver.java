@@ -331,6 +331,7 @@ public class Driver {
 		System.out.println();
 		System.out.println("That's it! Follow the onscreen instructions and have fun! Just beware, the"+
 				"\nexit of the maze is locked just like the rest...with the same penalty for failure.");
+		System.out.println();
 				
 	}
 

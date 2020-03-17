@@ -77,12 +77,15 @@ public class Room implements Serializable {
 	}
 
 	public void setStatus(int status) {
+		if(status < -1 || status > 1)
+			throw new IllegalArgumentException("Status is invalid");
 		this.status = status;
 	}
 	
 	public int getStatus() {
 		return this.status;
 	}
+	
 	public Question getQuestion() {
 		return this.question;
 	}

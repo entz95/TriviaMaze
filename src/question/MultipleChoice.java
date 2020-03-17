@@ -9,7 +9,7 @@ public class MultipleChoice extends Question implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 9198620724096163343L;
-	ArrayList<String> options;
+	private ArrayList<String> options;
 	
 	public MultipleChoice(String ans, String ques, String optA, String optB, String optC, String optD) {
 		super(ans, ques);
