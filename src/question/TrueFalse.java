@@ -3,6 +3,16 @@ package question;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/*
+ * Author: Bryan Wilson
+ * 
+ * Purpose: This class is designed to handle the TrueFalse implementation of the Question class. Holds
+ * 			no new data, but implements the getOptions functionality relative to a true or false question.
+ * 
+ * Version: 1.0
+ * 
+ */
+
 public class TrueFalse extends Question implements Serializable{
 
 

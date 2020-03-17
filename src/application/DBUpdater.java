@@ -7,10 +7,10 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 
 /*
- * Author: Byran Wilson
+ * Author: Bryan Wilson
  * 
- * The purpose of this class is to allow records to be added to the database tables to allow for greater question
- * varity and aid with testing.
+ * Purpose: This class is to allow records to be added to the database tables to allow for greater question
+ * 			variety and aid with testing.
  * 
  * Version: 1.0
  */
