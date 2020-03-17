@@ -54,6 +54,7 @@ public class Maze implements Serializable {
 
 				int index = rng.nextInt(questions.size());
 				mazeArray[i][j] = new Room(questions.get(index), i , j);
+				questions.remove(index);
 
 			}
 
