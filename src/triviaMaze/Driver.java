@@ -67,7 +67,7 @@ public class Driver {
 			} catch (Exception e) {
 				System.out.println("Please choose a valid number(1, 2, or 3)");
 			}
-		} while (choice < 1 || choice > 3 && choice != 1938);//add secret option here for a 2x2 code: 1938
+		} while (choice < 1 || choice > 3 && choice != 1938);
 
 		return choice;
 	}
