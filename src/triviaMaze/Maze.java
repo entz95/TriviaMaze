@@ -24,6 +24,8 @@ public class Maze implements Serializable {
 	private int posY;
 
 	public Maze(int x) {
+		if(x <= 0)
+			throw new IllegalArgumentException("Cannot make a maze with size 0 or less");
 		generateMaze(x, x);
 		this.posX = 1;
 		this.posY = 1;
@@ -31,8 +33,10 @@ public class Maze implements Serializable {
 
 	private void generateMaze(int rows, int columns) {
 
-		assert rows > 0 : "rows is zero or less";
-		assert columns > 0 : "columns is zero or less";
+		if(rows <= 0) 
+			throw new IllegalArgumentException("rows is zero or less");
+		if(columns <= 0) 
+			throw new IllegalArgumentException("columns is zero or less");
 
 		this.mazeArray = new Room[rows + 2][columns + 2];
 
@@ -67,6 +71,8 @@ public class Maze implements Serializable {
 	}
 
 	public void setXPosition(int x) {
+		if(x < 0)
+			throw new IllegalArgumentException("Cannot set x position smaller than 0");
 		this.posX = x;
 	}
 
@@ -75,6 +81,8 @@ public class Maze implements Serializable {
 	}
 
 	public void setYPosition(int y) {
+		if(y < 0)
+			throw new IllegalArgumentException("Cannot set y position smaller than 0");
 		this.posY = y;
 	}
 
@@ -91,7 +99,8 @@ public class Maze implements Serializable {
 	}
 
 	public Room navigateMaze(String input) {
-		assert input != null : "input is not valid";
+		if(input == null || input.isEmpty()) 
+			throw new IllegalArgumentException("input is not valid");
 
 		int playerX = this.posX;
 		int playerY = this.posY;
@@ -113,8 +122,7 @@ public class Maze implements Serializable {
 					nextRoom = currentRoom;
 					
 				}
-//				nextRoom = mazeArray[playerX][playerY];
-//				nextRoom = moveRoom(currentRoom, nextRoom);
+			
 				break;
 
 			case ("Down"): // case for moving down/south
@@ -142,6 +150,7 @@ public class Maze implements Serializable {
 					System.out.println("You cannot move " + input);
 					nextRoom = currentRoom;
 				}
+			
 				break;
 
 			case ("Right"): // case for moving right/east
@@ -155,6 +164,7 @@ public class Maze implements Serializable {
 					System.out.println("You cannot move " + input);
 					nextRoom = currentRoom;
 				}
+			
 				break;
 
 			default:
@@ -177,7 +187,7 @@ public class Maze implements Serializable {
 	}
 
 	private Room moveRoom(Room current, Room next) {
-
+		
 		@SuppressWarnings("resource")
 		Scanner kb = new Scanner(System.in);
 
@@ -226,7 +236,8 @@ public class Maze implements Serializable {
 
 	public boolean checkForPaths(Room[][] triviaMaze) {
 
-		assert triviaMaze != null : "Maze is null";
+		if(triviaMaze == null)
+			throw new IllegalArgumentException("Maze is null");
 
 		int[][] pathTester = roomArrayToIntArray(triviaMaze);
 		int length = pathTester.length;
