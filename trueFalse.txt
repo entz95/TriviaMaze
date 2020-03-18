@@ -1,0 +1,18 @@
+Fireball is a 3rd level spell.*TRUE
+Warlocks use Charisma to cast spells.*TRUE
+If you are not proficient with armor, it does not impact your ability to cast spells.*FALSE
+Dwarves are classified as small creatures.*FALSE
+A basic potion of healing heals for 3d4 points.*FALSE
+The most recent edition of Dungeons and Dragons is 5th edition.*TRUE
+Drow (Dark Elves) are associated with the Shadowfell.*FALSE
+Before it was called Dungeons & Dragons, the game system was called Chainmail.*TRUE
+Tomb of Annihilation is considered a fair adventure for low level characters.*FALSE
+A basic longsword does 1d8 points of damage.*TRUE
+Level 0 spells are called cantrips in 5th edition.*TRUE
+Chromatic dragons (Blue, White, etc) are Good Aligned creatures.*FALSE
+Fighters get Rage as a class ability.*FALSE
+The average roll on a d10 is a 5.*FALSE
+Beholders create more beholders with only their dreams.*TRUE
+Kenku are incapable of creative thought.*TRUE
+The typical movement speed of a medium sized creature is 25 feet.*FALSE
+Dragonborn do not possess tails.*TRUE
