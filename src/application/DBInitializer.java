@@ -11,8 +11,8 @@ import java.util.Scanner;
 /*
  * Author: Bryan Wilson
  * 
- * The purpose of this class is to allow the database to be reset to a default state, should something ever happen
- * to the database that would make the game unable to be played properly. 
+ * Purpose: This class is to allow the database to be reset to a default state, should something ever happen
+ * 			to the database that would make the game unable to be played properly. 
  * 
  * Version: 1.0
  * 
@@ -35,6 +35,7 @@ public class DBInitializer {
 				sql = "CREATE TABLE TRUE_FALSE " + "(ID INT PRIMARY KEY 	NOT NULL,"
 						+ "QUESTION		 TEXT	NOT NULL," +  "ANSWER			 TEXT	NOT NULL)";
 				stmt.executeUpdate(sql);
+				
 			} catch(Exception e) {
 				sql = "DROP TABLE TRUE_FALSE";
 				stmt.executeUpdate(sql);
@@ -45,9 +46,11 @@ public class DBInitializer {
 			}
 			
 			File source = new File("./trueFalse.txt");
+			
 			if(source.exists() && source.canRead()) {
 				Scanner fin = new Scanner(source);
 				int count = 1;
+				
 				while(fin.hasNextLine()) {
 					String[] result = fin.nextLine().split("\\*");
 					PreparedStatement pstmt = conn.prepareStatement("INSERT INTO TRUE_FALSE (ID, QUESTION, ANSWER)" +
@@ -59,6 +62,7 @@ public class DBInitializer {
 					pstmt.executeUpdate();
 					count++;
 				}
+				
 				fin.close();
 			}
 			
@@ -72,6 +76,7 @@ public class DBInitializer {
 			e.printStackTrace();
 			return false;
 		}
+		
 	}
 	
 	public static boolean initializeMultipleChoice() {
@@ -103,9 +108,11 @@ public class DBInitializer {
 			}
 			
 			File source = new File("./multipleChoice.txt");
+			
 			if(source.exists() && source.canRead()) {
 				Scanner fin = new Scanner(source);
 				int count = 1;
+				
 				while(fin.hasNextLine()) {
 					String[] result = fin.nextLine().split("\\*");
 					PreparedStatement pstmt = conn.prepareStatement("INSERT INTO MULTIPLE_CHOICE " +
@@ -122,6 +129,7 @@ public class DBInitializer {
 					pstmt.executeUpdate();
 					count++;
 				}
+				
 				fin.close();
 			}
 			

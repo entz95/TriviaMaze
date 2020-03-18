@@ -13,8 +13,8 @@ import question.TrueFalse;
 /*
  * Author: Bryan Wilson
  * 
- * The purpose of this class is to allow the program to get access to the data in each table, or all the data
- * contained within the database. Returns result sets as an ArrayList of Questions.
+ * Purpose: This class is to allow the program to get access to the data in each table, or all the data
+ * 			contained within the database. Returns result sets as an ArrayList of Questions.
  * 
  * Version: 1.0
  * 

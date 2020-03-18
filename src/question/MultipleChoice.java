@@ -3,6 +3,17 @@ package question;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+/*
+ * Author: Bryan Wilson
+ * 
+ * Purpose: This class id designed to handle the MultipleChoice implementation of the Question class. Holds
+ * 			an ArrayList of its given options as well as implementing the getOptions method relative to the 
+ * 			implementation of a multiple choice question.
+ * 
+ * Version: 1.0
+ * 
+ */
+
 public class MultipleChoice extends Question implements Serializable {
 	
 	/**
